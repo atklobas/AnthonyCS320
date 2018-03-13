@@ -1,0 +1,4 @@
+<
+"books"->[
+<"isbn"-> "9781593275846",
+"title"-> "Eloquent JavaScript, Second Edition","author"-> "Marijn Haverbeke","publisher"-> "No Starch Press","pages"-> 472,"website"-> "http://eloquentjavascript.net/">,<"isbn"-> "9781449331818","title"-> "Learning JavaScript Design Patterns","author"-> "Addy Osmani","publisher"-> "O'Reilly Media","pages"-> 254>]>
