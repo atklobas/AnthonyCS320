@@ -1,6 +1,7 @@
 import pygame
 from Constants import *
 import math
+import copy
 class AnimatedSprite():
     def __init__(self, sheet, rect,  x, y,  offsetX, offsetY, rotation, scale):
         self.x=x
@@ -76,6 +77,7 @@ class Circle:
 
 class Collidable:
     def __init__(self,x,y,xvel,yvel):
+        self.canColide=True;
         self.x=x
         self.y=y
         self.xvel=xvel
@@ -90,6 +92,8 @@ class Collidable:
         self.y+=self.yvel*delta
         self.x+=self.xvel*delta
     def collides(self,o):
+        if not (self.canColide and o.canColide):
+            return False
         collides=False;
         for selfob in self.components:
             for otho in o.components:
@@ -125,3 +129,42 @@ class Wall(Collidable, Drawable):
         self.sprites.append(AnimatedSprite(sheet,(56, 323, 26, 160),0, -240-WallGap,  0, 0, 0, 3))
         for comp in self.components:
             comp.debugColor=(0,255,0)
+class Goal(Collidable, Drawable):
+    def __init__(self, x,):
+         Collidable.__init__(self, x,0,WallSpeed,0);
+         Drawable.__init__(self)
+         self.components.append(Rectangle(50,Height/2,100,Height))
+         for comp in self.components:
+            comp.debugColor=(0,0,255)
+    def activate(self):
+        self.canColide=True;
+    def complete(self):
+        self.canColide=False;
+class Score(Drawable):
+    
+    def __init__(self,sheet, x, y):
+         Drawable.__init__(self)
+         self.num=0;
+         self.x=x+50;
+         self.y=y+50;
+         self.nums=[];
+         self.nums.append(AnimatedSprite(sheet,(496, 60, 12, 16),0,0,  0, 0, 0, 3));
+         self.nums.append(AnimatedSprite(sheet,(135, 455, 12, 16),0,0,  0, 0, 0, 3));
+         self.nums.append(AnimatedSprite(sheet,(290, 160, 12, 16),0,0,  0, 0, 0, 3));
+         self.nums.append(AnimatedSprite(sheet,(304, 160, 12, 16),0,0,  0, 0, 0, 3));
+         self.nums.append(AnimatedSprite(sheet,(318, 160, 12, 16),0,0,  0, 0, 0, 3));
+         self.nums.append(AnimatedSprite(sheet,(332, 160, 12,  16),0,0,  0, 0, 0, 3));
+         self.nums.append(AnimatedSprite(sheet,(290, 184, 12, 16),0,0,  0, 0, 0, 3));
+         self.nums.append(AnimatedSprite(sheet,(304, 184, 12, 16),0,0,  0, 0, 0, 3));
+         self.nums.append(AnimatedSprite(sheet,(318, 184, 12, 16),0,0,  0, 0, 0, 3));
+         self.nums.append(AnimatedSprite(sheet,(332, 184, 12, 16),0,0,  0, 0, 0, 3));
+         self.sprites.append(self.nums[0])
+    def inc(self):
+        self.num=self.num+1;
+        if(self.num<10):
+             self.sprites=[copy.copy(self.nums[self.num%10])]
+        else:
+            self.sprites=[copy.copy(self.nums[(self.num/10)%10]), copy.copy(self.nums[self.num%10])];
+            self.sprites[1].x+=40;
+        pass
+        

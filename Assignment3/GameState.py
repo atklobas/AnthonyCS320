@@ -1,15 +1,19 @@
 import pygame
 import random
 from Constants import *
-from Objects import Bird,Wall
+from Objects import Bird,Wall, Goal, Score
 class PlayState:
     def __init__(self,game):
         self.game=game
         self.b=Bird(game.sheet, BirdStartX,BirdStartY,0,0)
-        self.walls=[];
+        self.score=Score(game.sheet, 0, 0)
+        self.goals=[]
+        self.walls=[]
+        
         self.diedAt=0
         for i in range(0,WallCount):
             self.walls.append(Wall(game.sheet, FirstWall+WallDistance*i,random.randint(WallGap,Height)))
+            self.goals.append(Goal(FirstWall+WallDistance*i))
         self.lastwall=WallCount*WallDistance-WallWidth
 
     def useInput(self,events):
@@ -32,12 +36,24 @@ class PlayState:
                     self.lastwall+=WallDistanceIncrease
                     wall.x=self.lastwall
                     wall.y=random.randint(WallGap,Height)
+            for goal in self.goals:
+                goal.update(delta)
+                if(goal.x<-WallWidth):
+                    goal.x=self.lastwall
+                    goal.activate();
+                if(self.b.collides(goal)):
+                        self.score.inc();
+                        goal.complete();
+                
         elif(self.diedAt+1000<pygame.time.get_ticks()):
              self.game.nextState=MenuState(self.game)
 
     def draw(self,screen):
         screen.fill((0, 0, 0))
+        self.score.draw(screen)
         self.b.draw(screen)
+        for goal in self.goals:
+            goal.draw(screen)
         for wall in self.walls:
             wall.draw(screen)
     

@@ -1,8 +1,8 @@
 #GameConstants
-Height=800
+Height=600
 Width=1100
 FirstWall=Width+200
-DrawCollisions=True
+DrawCollisions=False
 
 #Wall Constants
 WallCount=5
