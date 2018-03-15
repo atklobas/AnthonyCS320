@@ -6,11 +6,12 @@ print("Hello world");
 class FlappyBird:
     def __init__(self):
         pygame.init()
-        self.state=MenuState(self)
-        self.nextState=self.state
+        
         self.screen = pygame.display.set_mode((Width,Height))
         self.clock = pygame.time.Clock()
         self.sheet = pygame.image.load("sprites.png");
+        self.state=MenuState(self)
+        self.nextState=self.state
         
         
     def play(self):

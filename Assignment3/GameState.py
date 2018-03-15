@@ -2,6 +2,7 @@ import pygame
 import random
 from Constants import *
 from Objects import Bird,Wall, Goal, Score
+from UI import *
 class PlayState:
     def __init__(self,game):
         self.game=game
@@ -18,9 +19,9 @@ class PlayState:
 
     def useInput(self,events):
         for event in events:
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            if event.type==pygame.MOUSEBUTTONDOWN or (event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE ):
                 self.b.flap()
-            elif event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
+            elif  event.type==pygame.MOUSEBUTTONUP or (event.type == pygame.KEYUP and event.key == pygame.K_SPACE):
                 self.b.stop()
 
     def update(self, delta):
@@ -62,11 +63,16 @@ class DeadState:
 class MenuState:
     def __init__(self,game):
         self.game=game
+        self.button=Button(game.sheet,Width/2-75,  Height/2-60, (354, 118, 54, 40))
     def useInput(self,events):
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 self.game.nextState=PlayState(self.game)
+            elif event.type==pygame.MOUSEBUTTONDOWN:
+                if(self.button.click(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])):
+                    self.game.nextState=PlayState(self.game)
     def update(self, delta):
         pass
     def draw(self,screen):
         screen.fill((0, 0, 0))
+        self.button.draw(screen, 0, 0)
